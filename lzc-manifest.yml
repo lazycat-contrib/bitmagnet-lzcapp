@@ -15,7 +15,6 @@ application:
     - protocol: udp
       port: 3334
       service: bitmagnet
-
 services:
   bitmagnet:
     # upstream: ghcr.io/bitmagnet-io/bitmagnet:v0.10.1
@@ -41,8 +40,8 @@ services:
     depends_on:
       - bitmagnet-db
   bitmagnet-db:
-    # upstream: library/postgres:16.9
-    image: docker.1ms.run/library/postgres:16.9
+    # upstream: library/postgres:16.15
+    image: docker.1ms.run/library/postgres:16.15
     environment:
       - POSTGRES_USER=bitmagnet
       - POSTGRES_PASSWORD={{PASSWORD_bm_db_pw}}
@@ -55,7 +54,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
 usage: |
   Bitmagnet 是一个自托管的 BitTorrent 索引器、DHT 爬虫与种子搜索引擎，
   可对 DHT 网络中的种子信息进行爬取、元数据增强，并提供本地搜索界面。
