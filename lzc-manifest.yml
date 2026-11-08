@@ -1,0 +1,71 @@
+application:
+  subdomain: bitmagnet
+  multi_instance: false
+  # 应用自身无账号体系（bitmagnet 是无鉴权的本地索引服务），
+  # 参照 blocky/shimmy 判例：不加 public_path，仅由平台入口鉴权防护。
+  upstreams:
+    - location: /package-licenses/
+      backend: file:///lzcapp/pkg/content/licenses/
+    - location: /
+      backend: http://bitmagnet:3333/
+  ingress:
+    - protocol: tcp
+      port: 3334
+      service: bitmagnet
+    - protocol: udp
+      port: 3334
+      service: bitmagnet
+
+services:
+  bitmagnet:
+    # upstream: ghcr.io/bitmagnet-io/bitmagnet:v0.10.1
+    image: ghcr.1ms.run/bitmagnet-io/bitmagnet:v0.10.1
+    command:
+      - worker
+      - run
+      - --all
+    environment:
+      - TZ=Asia/Shanghai
+      - TMPDIR=/app/temp
+      - POSTGRES_HOST=bitmagnet-db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=bitmagnet
+      - POSTGRES_USER=bitmagnet
+      - POSTGRES_PASSWORD={{PASSWORD_bm_db_pw}}
+      - JWT_SECRET={{PASSWORD_bm_jwt}}
+      - HTTP_SERVER_PORT=3333
+      - QUEUE_COMPACTION_INTERVAL_SECONDS=30
+    binds:
+      - /lzcapp/var/data:/app/data
+      - /lzcapp/var/downloads:/app/downloads
+    depends_on:
+      - bitmagnet-db
+  bitmagnet-db:
+    # upstream: library/postgres:16.9
+    image: docker.1ms.run/library/postgres:16.9
+    environment:
+      - POSTGRES_USER=bitmagnet
+      - POSTGRES_PASSWORD={{PASSWORD_bm_db_pw}}
+      - POSTGRES_DB=bitmagnet
+      - TZ=Asia/Shanghai
+    binds:
+      - /lzcapp/var/db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d bitmagnet -U bitmagnet"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+usage: |
+  Bitmagnet 是一个自托管的 BitTorrent 索引器、DHT 爬虫与种子搜索引擎，
+  可对 DHT 网络中的种子信息进行爬取、元数据增强，并提供本地搜索界面。
+
+  使用方法：
+  1. 打开应用即可使用搜索界面；系统无账号体系，请勿将其对外开放给
+     不可信网络（本包由平台入口鉴权统一防护）。
+  2. DHT 爬虫通过 3334 端口（TCP/UDP）参与网络，平台已自动转发。
+  3. 数据存放在 /lzcapp/var/data，下载的种子元数据存放在 /lzcapp/var/downloads。
+
+  说明：
+  - 本包未做实机验证，功能以官方文档为准：https://bitmagnet.io/
+  - 许可为 MIT，全文随包附带，见 /package-licenses/。

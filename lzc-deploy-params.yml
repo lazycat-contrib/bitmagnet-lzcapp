@@ -1,0 +1,29 @@
+params:
+  - id: bm_db_pw
+    type: secret
+    name: "数据库密码"
+    description: "PostgreSQL 数据库密码（已预置随机值，应用自动使用）"
+    default_value: "tR7wKe2mPa9xQz4b"
+    optional: false
+  - id: bm_jwt
+    type: secret
+    name: "JWT 密钥"
+    description: "应用内部 JWT 签名密钥（已预置随机值，无需修改）"
+    default_value: "uW3nEs8cRt5yHk2m"
+    optional: false
+
+locales:
+  zh:
+    bm_db_pw:
+      name: "数据库密码"
+      description: "PostgreSQL 数据库密码（已预置随机值，应用自动使用）"
+    bm_jwt:
+      name: "JWT 密钥"
+      description: "应用内部 JWT 签名密钥（已预置随机值，无需修改）"
+  en:
+    bm_db_pw:
+      name: "Database password"
+      description: "PostgreSQL password (pre-filled with a random value, used automatically)"
+    bm_jwt:
+      name: "JWT password"
+      description: "Internal JWT signing password (pre-filled with a random value, no need to change)"

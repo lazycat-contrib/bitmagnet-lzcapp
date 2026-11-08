@@ -1,0 +1,18 @@
+package: community.lazycat.app.bitmagnet
+name: Bitmagnet
+version: 0.10.1
+description: "Self-hosted BitTorrent indexer, DHT crawler and torrent search engine."
+min_os_version: "1.5.0"
+homepage: https://bitmagnet.io
+author: bitmagnet-io
+license: MIT
+permissions:
+  required:
+    - net.internet
+locales:
+  zh:
+    name: Bitmagnet
+    description: "自托管的 BitTorrent 索引器、DHT 爬虫与种子搜索引擎。"
+  en:
+    name: Bitmagnet
+    description: "Self-hosted BitTorrent indexer, DHT crawler and torrent search engine."
