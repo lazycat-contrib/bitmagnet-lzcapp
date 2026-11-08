@@ -1,4 +1,4 @@
-name: Build Pretix LPK
+name: Build bitmagnet LPK
 on:
   workflow_dispatch:
 permissions:
@@ -14,3 +14,4 @@ jobs:
       operation: auto
       config: .github/lazycat-action.yml
       versioned-release-asset: true
+      toolchains: docker
